@@ -3,12 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePortfolio } from "@/contexts/PortfolioContext";
+import { NKLogo } from "@/components/NKLogo";
 
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
   { name: "Experience", path: "/experience" },
   { name: "Skills", path: "/skills" },
+  { name: "Projects", path: "/projects" },
   { name: "Contact", path: "/contact" },
 ];
 
@@ -41,13 +43,7 @@ export const Navbar = () => {
     >
       <div className="container mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="text-2xl font-bold text-gradient">NK</span>
-            <span className="hidden md:inline text-foreground font-medium group-hover:text-primary transition-colors">
-              Nasif Kamal
-            </span>
-          </Link>
+          <NKLogo />
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">

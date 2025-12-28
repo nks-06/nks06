@@ -1,4 +1,4 @@
-import { Experience, Skill, PersonalInfo } from "@/types/portfolio";
+import { Experience, Skill, PersonalInfo, Education, Certification, SocialLink, AboutStats, Project } from "@/types/portfolio";
 import profileImage1 from "@/assets/profile-1.png";
 import profileImage2 from "@/assets/profile-2.png";
 
@@ -14,6 +14,13 @@ export const personalInfo: PersonalInfo = {
   profileImage2: profileImage2,
   linkedin: "https://www.linkedin.com/in/nk06",
   whatsapp: "+8801780522666",
+  resumeUrl: "",
+};
+
+export const aboutStats: AboutStats = {
+  yearsOfExperience: 7,
+  projectsCompleted: 50,
+  certificationsCount: 5,
 };
 
 export const experiences: Experience[] = [
@@ -110,40 +117,44 @@ export const experiences: Experience[] = [
 ];
 
 export const skills: Skill[] = [
-  { name: "ERP Management (Odoo, JDE, ITS)", level: 95, category: "ERP" },
-  { name: "AI Automation", level: 85, category: "Technology" },
-  { name: "Data Management", level: 92, category: "Data" },
-  { name: "IT Operations", level: 90, category: "IT" },
-  { name: "Web Development", level: 85, category: "Development" },
-  { name: "Data Mining & Analysis", level: 88, category: "Data" },
-  { name: "Software Development", level: 82, category: "Development" },
-  { name: "GIS & QGIS", level: 80, category: "Technology" },
-  { name: "MS Office Suite", level: 95, category: "Tools" },
-  { name: "Training & Mentoring", level: 90, category: "Soft Skills" },
-  { name: "Process Improvement", level: 88, category: "Management" },
-  { name: "Project Management", level: 85, category: "Management" },
+  { id: "1", name: "ERP Management (Odoo, JDE, ITS)", level: 95, category: "ERP" },
+  { id: "2", name: "AI Automation", level: 85, category: "Technology" },
+  { id: "3", name: "Data Management", level: 92, category: "Data" },
+  { id: "4", name: "IT Operations", level: 90, category: "IT" },
+  { id: "5", name: "Web Development", level: 85, category: "Development" },
+  { id: "6", name: "Data Mining & Analysis", level: 88, category: "Data" },
+  { id: "7", name: "Software Development", level: 82, category: "Development" },
+  { id: "8", name: "GIS & QGIS", level: 80, category: "Technology" },
+  { id: "9", name: "MS Office Suite", level: 95, category: "Tools" },
+  { id: "10", name: "Training & Mentoring", level: 90, category: "Soft Skills" },
+  { id: "11", name: "Process Improvement", level: 88, category: "Management" },
+  { id: "12", name: "Project Management", level: 85, category: "Management" },
 ];
 
-export const education = [
+export const education: Education[] = [
   {
+    id: "1",
     degree: "Master of Science in Computer Science",
     institution: "American International University Bangladesh",
     year: "Completed",
     gpa: "2.88/4.00",
   },
   {
+    id: "2",
     degree: "Bachelor of Science in Computer Science",
     institution: "American International University Bangladesh",
     year: "Completed",
     gpa: "Completed",
   },
   {
+    id: "3",
     degree: "Higher Secondary School Certificate",
     institution: "Cantonment Public School & College, Rangpur",
     year: "Completed",
     gpa: "4.88/5.00",
   },
   {
+    id: "4",
     degree: "Secondary School Certificate",
     institution: "Cantonment Public School & College, Rangpur",
     year: "Completed",
@@ -151,10 +162,17 @@ export const education = [
   },
 ];
 
-export const certifications = [
-  { name: "ERP Management", institution: "APM ERP, Dhaka", year: "2021" },
-  { name: "CCNA (Cisco Certified Network Associate)", institution: "AIUB, Dhaka", year: "2021" },
-  { name: "Fire Safety & Compliance", institution: "Red Crescent, Rangpur", year: "2015" },
-  { name: "Business English", institution: "SPEED", year: "2017" },
-  { name: "Advanced Microsoft Excel", institution: "SPEED", year: "2018" },
+export const certifications: Certification[] = [
+  { id: "1", name: "ERP Management", institution: "APM ERP, Dhaka", year: "2021" },
+  { id: "2", name: "CCNA (Cisco Certified Network Associate)", institution: "AIUB, Dhaka", year: "2021" },
+  { id: "3", name: "Fire Safety & Compliance", institution: "Red Crescent, Rangpur", year: "2015" },
+  { id: "4", name: "Business English", institution: "SPEED", year: "2017" },
+  { id: "5", name: "Advanced Microsoft Excel", institution: "SPEED", year: "2018" },
 ];
+
+export const socialLinks: SocialLink[] = [
+  { id: "1", platform: "LinkedIn", url: "https://www.linkedin.com/in/nk06", icon: "linkedin" },
+  { id: "2", platform: "WhatsApp", url: "+8801780522666", icon: "whatsapp" },
+];
+
+export const projects: Project[] = [];
