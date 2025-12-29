@@ -173,6 +173,13 @@
     @apply bg-card/80 backdrop-blur-xl border border-border/50;
   }
 
+  /* Mobile-specific solid backgrounds */
+  @media (max-width: 768px) {
+    .glass-card {
+      @apply bg-card border border-border/50;
+    }
+  }
+
   .skill-bar {
     @apply relative h-2 bg-muted rounded-full overflow-hidden;
   }
