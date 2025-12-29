@@ -1,18 +1,22 @@
 import { useState } from "react";
-import { Key, MessageCircle, Mail, Eye, EyeOff, Save, Lock } from "lucide-react";
+import { Key, MessageCircle, Mail, Eye, EyeOff, Save, Lock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export const ApiSettingsTab = () => {
-  const { apiSettings, updateApiSettings, adminPassword, setAdminPassword } = usePortfolio();
+  const { apiSettings, updateApiSettings } = usePortfolio();
   const { toast } = useToast();
   const [showResendKey, setShowResendKey] = useState(false);
   const [showWhatsappKey, setShowWhatsappKey] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   const handleSaveApiSettings = () => {
     toast({
@@ -21,21 +25,57 @@ export const ApiSettingsTab = () => {
     });
   };
 
-  const handlePasswordChange = () => {
-    if (newPassword.length < 6) {
+  const handlePasswordChange = async () => {
+    if (!currentPassword) {
       toast({
         title: "Error",
-        description: "Password must be at least 6 characters.",
+        description: "Please enter your current password.",
         variant: "destructive",
       });
       return;
     }
-    setAdminPassword(newPassword);
-    setNewPassword("");
-    toast({
-      title: "Password Updated",
-      description: "Admin password has been changed successfully.",
-    });
+
+    if (newPassword.length < 6) {
+      toast({
+        title: "Error",
+        description: "New password must be at least 6 characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUpdatingPassword(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("update-admin-password", {
+        body: { currentPassword, newPassword },
+      });
+
+      if (error) throw error;
+
+      if (data?.error) {
+        toast({
+          title: "Error",
+          description: data.error,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setCurrentPassword("");
+      setNewPassword("");
+      toast({
+        title: "Password Updated",
+        description: "Admin password has been changed successfully.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update password.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUpdatingPassword(false);
+    }
   };
 
   return (
@@ -52,25 +92,53 @@ export const ApiSettingsTab = () => {
           <p className="text-muted-foreground text-sm">
             Change the password used to access the admin panel.
           </p>
-          <div className="flex gap-2">
-            <div className="relative flex-1">
+          <div className="space-y-3">
+            <div className="relative">
               <Input
-                type={showPassword ? "text" : "password"}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter new password"
+                type={showCurrentPassword ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Current password"
                 className="pr-10"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
-            <Button variant="hero" onClick={handlePasswordChange}>
-              Update Password
+            <div className="relative">
+              <Input
+                type={showNewPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="New password"
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            <Button 
+              variant="hero" 
+              onClick={handlePasswordChange} 
+              disabled={isUpdatingPassword}
+              className="w-full"
+            >
+              {isUpdatingPassword ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                "Update Password"
+              )}
             </Button>
           </div>
         </CardContent>
