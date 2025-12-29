@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_settings: {
+        Row: {
+          admin_email: string
+          created_at: string
+          id: string
+          password_hash: string
+          updated_at: string
+        }
+        Insert: {
+          admin_email?: string
+          created_at?: string
+          id?: string
+          password_hash: string
+          updated_at?: string
+        }
+        Update: {
+          admin_email?: string
+          created_at?: string
+          id?: string
+          password_hash?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      password_reset_tokens: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          token: string
+          used: boolean
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          token: string
+          used?: boolean
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          token?: string
+          used?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
