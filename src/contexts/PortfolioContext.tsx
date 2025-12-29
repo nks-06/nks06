@@ -145,49 +145,73 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
     return saved || "admin123"; // Default password
   });
 
+  // Safe localStorage setter with error handling
+  const safeLocalStorageSet = (key: string, value: string) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      if (e instanceof DOMException && e.name === 'QuotaExceededError') {
+        console.warn(`Storage quota exceeded for ${key}. Clearing old data.`);
+        // Clear visitors first (least important)
+        localStorage.removeItem("portfolio_visitors");
+        // Try again
+        try {
+          localStorage.setItem(key, value);
+        } catch {
+          console.error(`Still can't save ${key}. Data too large.`);
+        }
+      }
+    }
+  };
+
   // Persist all data
   useEffect(() => {
-    localStorage.setItem("portfolio_experiences", JSON.stringify(experiences));
+    safeLocalStorageSet("portfolio_experiences", JSON.stringify(experiences));
   }, [experiences]);
 
   useEffect(() => {
-    localStorage.setItem("portfolio_personalInfo", JSON.stringify(personalInfo));
+    safeLocalStorageSet("portfolio_personalInfo", JSON.stringify(personalInfo));
   }, [personalInfo]);
 
   useEffect(() => {
-    localStorage.setItem("portfolio_skills", JSON.stringify(skills));
+    safeLocalStorageSet("portfolio_skills", JSON.stringify(skills));
   }, [skills]);
 
   useEffect(() => {
-    localStorage.setItem("portfolio_education", JSON.stringify(educationList));
+    safeLocalStorageSet("portfolio_education", JSON.stringify(educationList));
   }, [educationList]);
 
   useEffect(() => {
-    localStorage.setItem("portfolio_certifications", JSON.stringify(certificationsList));
+    safeLocalStorageSet("portfolio_certifications", JSON.stringify(certificationsList));
   }, [certificationsList]);
 
   useEffect(() => {
-    localStorage.setItem("portfolio_projects", JSON.stringify(projects));
+    // For projects, strip large base64 images before saving
+    const projectsToSave = projects.map(p => ({
+      ...p,
+      imageUrl: p.imageUrl && p.imageUrl.length > 10000 ? '' : p.imageUrl
+    }));
+    safeLocalStorageSet("portfolio_projects", JSON.stringify(projectsToSave));
   }, [projects]);
 
   useEffect(() => {
-    localStorage.setItem("portfolio_socialLinks", JSON.stringify(socialLinks));
+    safeLocalStorageSet("portfolio_socialLinks", JSON.stringify(socialLinks));
   }, [socialLinks]);
 
   useEffect(() => {
-    localStorage.setItem("portfolio_aboutStats", JSON.stringify(aboutStats));
+    safeLocalStorageSet("portfolio_aboutStats", JSON.stringify(aboutStats));
   }, [aboutStats]);
 
   useEffect(() => {
-    localStorage.setItem("portfolio_apiSettings", JSON.stringify(apiSettings));
+    safeLocalStorageSet("portfolio_apiSettings", JSON.stringify(apiSettings));
   }, [apiSettings]);
 
   useEffect(() => {
-    localStorage.setItem("portfolio_visitors", JSON.stringify(visitors));
+    safeLocalStorageSet("portfolio_visitors", JSON.stringify(visitors));
   }, [visitors]);
 
   useEffect(() => {
-    localStorage.setItem("admin_password", adminPassword);
+    safeLocalStorageSet("admin_password", adminPassword);
   }, [adminPassword]);
 
   // Experience functions
