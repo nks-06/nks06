@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Settings, Briefcase, GraduationCap, Zap, FolderKanban, Phone, User, Key, Users, LogOut } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
@@ -21,13 +21,26 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Plus, Edit2, Trash2 } from "lucide-react";
 
 const Admin = () => {
-  const { experiences, addExperience, updateExperience, deleteExperience, isAdminAuthenticated, logoutAdmin } = usePortfolio();
+  const { experiences, addExperience, updateExperience, deleteExperience } = usePortfolio();
   const { toast } = useToast();
   const [isExperienceDialogOpen, setIsExperienceDialogOpen] = useState(false);
   const [editingExperience, setEditingExperience] = useState<Experience | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  if (!isAdminAuthenticated) {
-    return <AdminLogin onLogin={() => {}} />;
+  useEffect(() => {
+    // Check if admin session exists
+    const session = sessionStorage.getItem("admin_session");
+    setIsAuthenticated(!!session);
+  }, []);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("admin_session");
+    setIsAuthenticated(false);
+    toast({ title: "Logged Out", description: "You have been logged out." });
+  };
+
+  if (!isAuthenticated) {
+    return <AdminLogin onLogin={() => setIsAuthenticated(true)} />
   }
 
   const handleAddExperience = (data: Omit<Experience, "id">) => {
@@ -66,7 +79,7 @@ const Admin = () => {
                 <Settings className="w-8 h-8 text-primary animate-spin-slow" />
                 <h1 className="text-3xl font-bold">Admin Panel</h1>
               </div>
-              <Button variant="outline" onClick={logoutAdmin}>
+              <Button variant="outline" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>
