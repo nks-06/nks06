@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Lock, Eye, EyeOff } from "lucide-react";
+import { Lock, Eye, EyeOff, Mail, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { usePortfolio } from "@/contexts/PortfolioContext";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AdminLoginProps {
   onLogin: () => void;
@@ -14,19 +14,80 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const { loginAdmin } = usePortfolio();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loginAdmin(password)) {
-      toast({
-        title: "Welcome!",
-        description: "You have successfully logged into the admin panel.",
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const { data, error: funcError } = await supabase.functions.invoke("admin-login", {
+        body: { password },
       });
-      onLogin();
-    } else {
-      setError("Invalid password. Please try again.");
+
+      if (funcError) {
+        throw new Error(funcError.message);
+      }
+
+      if (data?.error) {
+        setError(data.error);
+        return;
+      }
+
+      if (data?.success) {
+        sessionStorage.setItem("admin_session", data.sessionToken);
+        toast({
+          title: "Welcome!",
+          description: "You have successfully logged into the admin panel.",
+        });
+        onLogin();
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Failed to login. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    setIsResetting(true);
+    setError("");
+
+    try {
+      const { data, error: funcError } = await supabase.functions.invoke("send-password-reset", {
+        body: {},
+      });
+
+      if (funcError) {
+        throw new Error(funcError.message);
+      }
+
+      if (data?.error) {
+        toast({
+          title: "Error",
+          description: data.error,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Email Sent",
+        description: "Password reset link has been sent to your admin email.",
+      });
+    } catch (err) {
+      console.error("Reset error:", err);
+      toast({
+        title: "Error",
+        description: "Failed to send reset email. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -54,6 +115,7 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
                   setError("");
                 }}
                 className="pr-10 bg-muted/50 border-border"
+                disabled={isLoading}
               />
               <button
                 type="button"
@@ -66,10 +128,38 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
             {error && (
               <p className="text-destructive text-sm">{error}</p>
             )}
-            <Button type="submit" variant="hero" className="w-full">
-              Login
+            <Button type="submit" variant="hero" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
             </Button>
           </form>
+
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              disabled={isResetting}
+              className="text-sm text-primary hover:text-primary/80 transition-colors inline-flex items-center gap-2"
+            >
+              {isResetting ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  Sending reset link...
+                </>
+              ) : (
+                <>
+                  <Mail className="w-3 h-3" />
+                  Forgot password? Send reset link
+                </>
+              )}
+            </button>
+          </div>
         </CardContent>
       </Card>
     </div>
