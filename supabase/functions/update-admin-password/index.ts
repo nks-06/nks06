@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import bcrypt from "https://esm.sh/bcryptjs@2.4.3";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -40,6 +40,7 @@ serve(async (req) => {
       .single();
 
     if (fetchError || !adminData) {
+      console.error("Fetch error:", fetchError);
       return new Response(
         JSON.stringify({ error: "Admin settings not found" }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -47,7 +48,7 @@ serve(async (req) => {
     }
 
     // Verify current password
-    const isValidPassword = await bcrypt.compare(currentPassword, adminData.password_hash);
+    const isValidPassword = bcrypt.compareSync(currentPassword, adminData.password_hash);
     
     // Also check default password fallback
     const isDefaultPassword = currentPassword === "admin123";
@@ -60,8 +61,8 @@ serve(async (req) => {
     }
 
     // Hash new password
-    const salt = await bcrypt.genSalt(10);
-    const newPasswordHash = await bcrypt.hash(newPassword, salt);
+    const salt = bcrypt.genSaltSync(10);
+    const newPasswordHash = bcrypt.hashSync(newPassword, salt);
 
     // Update password in database
     const { error: updateError } = await supabase
