@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.2";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import bcrypt from "https://esm.sh/bcryptjs@2.4.3";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -57,13 +57,13 @@ serve(async (req) => {
     }
 
     // Hash new password
-    const passwordHash = await bcrypt.hash(newPassword);
+    const passwordHash = bcrypt.hashSync(newPassword, 10);
 
     // Update admin password
     const { error: updateError } = await supabase
       .from("admin_settings")
       .update({ password_hash: passwordHash })
-      .not("id", "is", null); // Update all rows (there should only be one)
+      .not("id", "is", null);
 
     if (updateError) {
       console.error("Error updating password:", updateError);
@@ -78,6 +78,8 @@ serve(async (req) => {
       .from("password_reset_tokens")
       .update({ used: true })
       .eq("token", token);
+
+    console.log("Password reset successful");
 
     return new Response(
       JSON.stringify({ success: true, message: "Password updated successfully" }),
