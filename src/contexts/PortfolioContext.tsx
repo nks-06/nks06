@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { Experience, PersonalInfo, Skill, Education, Certification, Project, SocialLink, AboutStats, ApiSettings, Visitor } from "@/types/portfolio";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   experiences as initialExperiences, 
   personalInfo as initialPersonalInfo,
@@ -61,6 +62,8 @@ interface PortfolioContextType {
   setAdminPassword: (password: string) => void;
   loginAdmin: (password: string) => boolean;
   logoutAdmin: () => void;
+  
+  isLoading: boolean;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
@@ -74,61 +77,39 @@ export const usePortfolio = () => {
 };
 
 export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  
   // Experiences
-  const [experiences, setExperiences] = useState<Experience[]>(() => {
-    const saved = localStorage.getItem("portfolio_experiences");
-    return saved ? JSON.parse(saved) : initialExperiences;
-  });
+  const [experiences, setExperiences] = useState<Experience[]>(initialExperiences);
 
   // Personal Info
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(() => {
-    const saved = localStorage.getItem("portfolio_personalInfo");
-    return saved ? JSON.parse(saved) : initialPersonalInfo;
-  });
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(initialPersonalInfo);
 
   // Skills
-  const [skills, setSkills] = useState<Skill[]>(() => {
-    const saved = localStorage.getItem("portfolio_skills");
-    return saved ? JSON.parse(saved) : initialSkills;
-  });
+  const [skills, setSkills] = useState<Skill[]>(initialSkills);
 
   // Education
-  const [educationList, setEducationList] = useState<Education[]>(() => {
-    const saved = localStorage.getItem("portfolio_education");
-    return saved ? JSON.parse(saved) : initialEducation;
-  });
+  const [educationList, setEducationList] = useState<Education[]>(initialEducation);
 
   // Certifications
-  const [certificationsList, setCertificationsList] = useState<Certification[]>(() => {
-    const saved = localStorage.getItem("portfolio_certifications");
-    return saved ? JSON.parse(saved) : initialCertifications;
-  });
+  const [certificationsList, setCertificationsList] = useState<Certification[]>(initialCertifications);
 
   // Projects
-  const [projects, setProjects] = useState<Project[]>(() => {
-    const saved = localStorage.getItem("portfolio_projects");
-    return saved ? JSON.parse(saved) : initialProjects;
-  });
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
 
   // Social Links
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(() => {
-    const saved = localStorage.getItem("portfolio_socialLinks");
-    return saved ? JSON.parse(saved) : initialSocialLinks;
-  });
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(initialSocialLinks);
 
   // About Stats
-  const [aboutStats, setAboutStats] = useState<AboutStats>(() => {
-    const saved = localStorage.getItem("portfolio_aboutStats");
-    return saved ? JSON.parse(saved) : initialAboutStats;
-  });
+  const [aboutStats, setAboutStats] = useState<AboutStats>(initialAboutStats);
 
-  // API Settings
+  // API Settings (local only - contains secrets)
   const [apiSettings, setApiSettings] = useState<ApiSettings>(() => {
     const saved = localStorage.getItem("portfolio_apiSettings");
     return saved ? JSON.parse(saved) : { resendApiKey: "", whatsappApiKey: "", whatsappPhoneId: "" };
   });
 
-  // Visitors
+  // Visitors (local only)
   const [visitors, setVisitors] = useState<Visitor[]>(() => {
     const saved = localStorage.getItem("portfolio_visitors");
     return saved ? JSON.parse(saved) : [];
@@ -142,194 +123,266 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
 
   const [adminPassword, setAdminPasswordState] = useState<string>(() => {
     const saved = localStorage.getItem("admin_password");
-    return saved || "admin123"; // Default password
+    return saved || "admin123";
   });
 
-  // Safe localStorage setter with error handling
-  const safeLocalStorageSet = (key: string, value: string) => {
-    try {
-      localStorage.setItem(key, value);
-    } catch (e) {
-      if (e instanceof DOMException && e.name === 'QuotaExceededError') {
-        console.warn(`Storage quota exceeded for ${key}. Clearing old data.`);
-        // Clear visitors first (least important)
-        localStorage.removeItem("portfolio_visitors");
-        // Try again
-        try {
-          localStorage.setItem(key, value);
-        } catch {
-          console.error(`Still can't save ${key}. Data too large.`);
+  // Fetch portfolio data from database
+  useEffect(() => {
+    const fetchPortfolioData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("portfolio_data")
+          .select("data_key, data_value");
+
+        if (error) {
+          console.error("Error fetching portfolio data:", error);
+          setIsLoading(false);
+          return;
         }
+
+        if (data) {
+          data.forEach((item) => {
+            const value = item.data_value as any;
+            switch (item.data_key) {
+              case "personalInfo":
+                if (value && Object.keys(value).length > 0) {
+                  // Merge with initial data to keep default images if not set
+                  setPersonalInfo(prev => ({
+                    ...prev,
+                    ...value,
+                    profileImage: value.profileImage || prev.profileImage,
+                    profileImage2: value.profileImage2 || prev.profileImage2,
+                  }));
+                }
+                break;
+              case "aboutStats":
+                if (value && Object.keys(value).length > 0) {
+                  setAboutStats(value);
+                }
+                break;
+              case "experiences":
+                if (Array.isArray(value) && value.length > 0) {
+                  setExperiences(value);
+                }
+                break;
+              case "skills":
+                if (Array.isArray(value) && value.length > 0) {
+                  setSkills(value);
+                }
+                break;
+              case "education":
+                if (Array.isArray(value) && value.length > 0) {
+                  setEducationList(value);
+                }
+                break;
+              case "certifications":
+                if (Array.isArray(value) && value.length > 0) {
+                  setCertificationsList(value);
+                }
+                break;
+              case "projects":
+                if (Array.isArray(value) && value.length > 0) {
+                  setProjects(value);
+                }
+                break;
+              case "socialLinks":
+                if (Array.isArray(value) && value.length > 0) {
+                  setSocialLinks(value);
+                }
+                break;
+            }
+          });
+        }
+      } catch (err) {
+        console.error("Error loading portfolio data:", err);
+      } finally {
+        setIsLoading(false);
       }
+    };
+
+    fetchPortfolioData();
+  }, []);
+
+  // Sync data to database
+  const syncToDatabase = useCallback(async (dataKey: string, dataValue: any) => {
+    if (!isAdminAuthenticated) return;
+    
+    try {
+      const { error } = await supabase.functions.invoke("update-portfolio", {
+        body: { dataKey, dataValue },
+      });
+
+      if (error) {
+        console.error("Error syncing to database:", error);
+      }
+    } catch (err) {
+      console.error("Error syncing to database:", err);
     }
-  };
+  }, [isAdminAuthenticated]);
 
-  // Persist all data
+  // Persist API settings to localStorage (contains secrets)
   useEffect(() => {
-    safeLocalStorageSet("portfolio_experiences", JSON.stringify(experiences));
-  }, [experiences]);
-
-  useEffect(() => {
-    safeLocalStorageSet("portfolio_personalInfo", JSON.stringify(personalInfo));
-  }, [personalInfo]);
-
-  useEffect(() => {
-    safeLocalStorageSet("portfolio_skills", JSON.stringify(skills));
-  }, [skills]);
-
-  useEffect(() => {
-    safeLocalStorageSet("portfolio_education", JSON.stringify(educationList));
-  }, [educationList]);
-
-  useEffect(() => {
-    safeLocalStorageSet("portfolio_certifications", JSON.stringify(certificationsList));
-  }, [certificationsList]);
-
-  useEffect(() => {
-    // For projects, strip large base64 images before saving
-    const projectsToSave = projects.map(p => ({
-      ...p,
-      imageUrl: p.imageUrl && p.imageUrl.length > 10000 ? '' : p.imageUrl
-    }));
-    safeLocalStorageSet("portfolio_projects", JSON.stringify(projectsToSave));
-  }, [projects]);
-
-  useEffect(() => {
-    safeLocalStorageSet("portfolio_socialLinks", JSON.stringify(socialLinks));
-  }, [socialLinks]);
-
-  useEffect(() => {
-    safeLocalStorageSet("portfolio_aboutStats", JSON.stringify(aboutStats));
-  }, [aboutStats]);
-
-  useEffect(() => {
-    safeLocalStorageSet("portfolio_apiSettings", JSON.stringify(apiSettings));
+    localStorage.setItem("portfolio_apiSettings", JSON.stringify(apiSettings));
   }, [apiSettings]);
 
+  // Persist visitors to localStorage
   useEffect(() => {
-    safeLocalStorageSet("portfolio_visitors", JSON.stringify(visitors));
+    localStorage.setItem("portfolio_visitors", JSON.stringify(visitors));
   }, [visitors]);
 
   useEffect(() => {
-    safeLocalStorageSet("admin_password", adminPassword);
+    localStorage.setItem("admin_password", adminPassword);
   }, [adminPassword]);
 
   // Experience functions
   const addExperience = (experience: Omit<Experience, "id">) => {
     const newExperience = { ...experience, id: Date.now().toString() };
-    setExperiences((prev) => [newExperience, ...prev]);
+    const updated = [newExperience, ...experiences];
+    setExperiences(updated);
+    syncToDatabase("experiences", updated);
   };
 
   const updateExperience = (id: string, updates: Partial<Experience>) => {
-    setExperiences((prev) =>
-      prev.map((exp) => (exp.id === id ? { ...exp, ...updates } : exp))
-    );
+    const updated = experiences.map((exp) => (exp.id === id ? { ...exp, ...updates } : exp));
+    setExperiences(updated);
+    syncToDatabase("experiences", updated);
   };
 
   const deleteExperience = (id: string) => {
-    setExperiences((prev) => prev.filter((exp) => exp.id !== id));
+    const updated = experiences.filter((exp) => exp.id !== id);
+    setExperiences(updated);
+    syncToDatabase("experiences", updated);
   };
 
   const updatePersonalInfo = (info: Partial<PersonalInfo>) => {
-    setPersonalInfo((prev) => ({ ...prev, ...info }));
+    const updated = { ...personalInfo, ...info };
+    setPersonalInfo(updated);
+    syncToDatabase("personalInfo", updated);
   };
 
   const updateProfileImage = (imageUrl: string, imageNumber: 1 | 2) => {
+    let updated: PersonalInfo;
     if (imageNumber === 1) {
-      setPersonalInfo((prev) => ({ ...prev, profileImage: imageUrl }));
+      updated = { ...personalInfo, profileImage: imageUrl };
     } else {
-      setPersonalInfo((prev) => ({ ...prev, profileImage2: imageUrl }));
+      updated = { ...personalInfo, profileImage2: imageUrl };
     }
+    setPersonalInfo(updated);
+    syncToDatabase("personalInfo", updated);
   };
 
   // Skill functions
   const addSkill = (skill: Omit<Skill, "id">) => {
     const newSkill = { ...skill, id: Date.now().toString() };
-    setSkills((prev) => [...prev, newSkill]);
+    const updated = [...skills, newSkill];
+    setSkills(updated);
+    syncToDatabase("skills", updated);
   };
 
   const updateSkill = (id: string, updates: Partial<Skill>) => {
-    setSkills((prev) =>
-      prev.map((skill) => (skill.id === id ? { ...skill, ...updates } : skill))
-    );
+    const updated = skills.map((skill) => (skill.id === id ? { ...skill, ...updates } : skill));
+    setSkills(updated);
+    syncToDatabase("skills", updated);
   };
 
   const deleteSkill = (id: string) => {
-    setSkills((prev) => prev.filter((skill) => skill.id !== id));
+    const updated = skills.filter((skill) => skill.id !== id);
+    setSkills(updated);
+    syncToDatabase("skills", updated);
   };
 
   // Education functions
   const addEducation = (edu: Omit<Education, "id">) => {
     const newEdu = { ...edu, id: Date.now().toString() };
-    setEducationList((prev) => [...prev, newEdu]);
+    const updated = [...educationList, newEdu];
+    setEducationList(updated);
+    syncToDatabase("education", updated);
   };
 
   const updateEducation = (id: string, updates: Partial<Education>) => {
-    setEducationList((prev) =>
-      prev.map((edu) => (edu.id === id ? { ...edu, ...updates } : edu))
-    );
+    const updated = educationList.map((edu) => (edu.id === id ? { ...edu, ...updates } : edu));
+    setEducationList(updated);
+    syncToDatabase("education", updated);
   };
 
   const deleteEducation = (id: string) => {
-    setEducationList((prev) => prev.filter((edu) => edu.id !== id));
+    const updated = educationList.filter((edu) => edu.id !== id);
+    setEducationList(updated);
+    syncToDatabase("education", updated);
   };
 
   // Certification functions
   const addCertification = (cert: Omit<Certification, "id">) => {
     const newCert = { ...cert, id: Date.now().toString() };
-    setCertificationsList((prev) => [...prev, newCert]);
+    const updated = [...certificationsList, newCert];
+    setCertificationsList(updated);
+    syncToDatabase("certifications", updated);
   };
 
   const updateCertification = (id: string, updates: Partial<Certification>) => {
-    setCertificationsList((prev) =>
-      prev.map((cert) => (cert.id === id ? { ...cert, ...updates } : cert))
-    );
+    const updated = certificationsList.map((cert) => (cert.id === id ? { ...cert, ...updates } : cert));
+    setCertificationsList(updated);
+    syncToDatabase("certifications", updated);
   };
 
   const deleteCertification = (id: string) => {
-    setCertificationsList((prev) => prev.filter((cert) => cert.id !== id));
+    const updated = certificationsList.filter((cert) => cert.id !== id);
+    setCertificationsList(updated);
+    syncToDatabase("certifications", updated);
   };
 
   // Project functions
   const addProject = (project: Omit<Project, "id">) => {
     const newProject = { ...project, id: Date.now().toString() };
-    setProjects((prev) => [...prev, newProject]);
+    const updated = [...projects, newProject];
+    setProjects(updated);
+    syncToDatabase("projects", updated);
   };
 
   const updateProject = (id: string, updates: Partial<Project>) => {
-    setProjects((prev) =>
-      prev.map((proj) => (proj.id === id ? { ...proj, ...updates } : proj))
-    );
+    const updated = projects.map((proj) => (proj.id === id ? { ...proj, ...updates } : proj));
+    setProjects(updated);
+    syncToDatabase("projects", updated);
   };
 
   const deleteProject = (id: string) => {
-    setProjects((prev) => prev.filter((proj) => proj.id !== id));
+    const updated = projects.filter((proj) => proj.id !== id);
+    setProjects(updated);
+    syncToDatabase("projects", updated);
   };
 
   // Social Link functions
   const addSocialLink = (link: Omit<SocialLink, "id">) => {
     const newLink = { ...link, id: Date.now().toString() };
-    setSocialLinks((prev) => [...prev, newLink]);
+    const updated = [...socialLinks, newLink];
+    setSocialLinks(updated);
+    syncToDatabase("socialLinks", updated);
   };
 
   const updateSocialLink = (id: string, updates: Partial<SocialLink>) => {
-    setSocialLinks((prev) =>
-      prev.map((link) => (link.id === id ? { ...link, ...updates } : link))
-    );
+    const updated = socialLinks.map((link) => (link.id === id ? { ...link, ...updates } : link));
+    setSocialLinks(updated);
+    syncToDatabase("socialLinks", updated);
   };
 
   const deleteSocialLink = (id: string) => {
-    setSocialLinks((prev) => prev.filter((link) => link.id !== id));
+    const updated = socialLinks.filter((link) => link.id !== id);
+    setSocialLinks(updated);
+    syncToDatabase("socialLinks", updated);
   };
 
   // About Stats functions
   const updateAboutStats = (stats: Partial<AboutStats>) => {
-    setAboutStats((prev) => ({ ...prev, ...stats }));
+    const updated = { ...aboutStats, ...stats };
+    setAboutStats(updated);
+    syncToDatabase("aboutStats", updated);
   };
 
   // Resume functions
   const updateResume = (resumeUrl: string) => {
-    setPersonalInfo((prev) => ({ ...prev, resumeUrl }));
+    const updated = { ...personalInfo, resumeUrl };
+    setPersonalInfo(updated);
+    syncToDatabase("personalInfo", updated);
   };
 
   // API Settings functions
@@ -404,6 +457,7 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
         setAdminPassword,
         loginAdmin,
         logoutAdmin,
+        isLoading,
       }}
     >
       {children}

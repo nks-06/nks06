@@ -62,6 +62,30 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_data: {
+        Row: {
+          created_at: string
+          data_key: string
+          data_value: Json
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data_key: string
+          data_value: Json
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data_key?: string
+          data_value?: Json
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
