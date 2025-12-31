@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Upload, FileText, User, X } from "lucide-react";
+import { Upload, FileText, User, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePortfolio } from "@/contexts/PortfolioContext";
 import { useToast } from "@/hooks/use-toast";
 import { ImageCropper } from "./ImageCropper";
+import { supabase } from "@/integrations/supabase/client";
 
 export const AboutTab = () => {
   const { personalInfo, updatePersonalInfo, aboutStats, updateAboutStats, updateProfileImage, updateResume } = usePortfolio();
@@ -17,6 +18,7 @@ export const AboutTab = () => {
   const resumeInputRef = useRef<HTMLInputElement>(null);
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
   const [imageNumber, setImageNumber] = useState<1 | 2>(1);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, imgNum: 1 | 2) => {
     const file = e.target.files?.[0];
@@ -30,13 +32,38 @@ export const AboutTab = () => {
     }
   };
 
-  const handleCropComplete = (croppedImage: string) => {
-    updateProfileImage(croppedImage, imageNumber);
-    toast({
-      title: "Image Updated",
-      description: `Profile image ${imageNumber} has been updated.`,
-    });
-    setImageToCrop(null);
+  const handleCropComplete = async (croppedImage: string) => {
+    setIsUploading(true);
+    try {
+      // Upload to cloud storage
+      const { data, error } = await supabase.functions.invoke("upload-image", {
+        body: {
+          imageData: croppedImage,
+          fileName: `profile-${imageNumber}.png`,
+          folder: "profile",
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        updateProfileImage(data.url, imageNumber);
+        toast({
+          title: "Image Updated",
+          description: `Profile image ${imageNumber} has been uploaded to cloud storage.`,
+        });
+      }
+    } catch (err) {
+      console.error("Error uploading image:", err);
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload image. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+      setImageToCrop(null);
+    }
   };
 
   const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,12 +154,17 @@ export const AboutTab = () => {
                 {/* Profile Image 1 */}
                 <div className="text-center">
                   <h3 className="font-semibold mb-4">Hero Section Image</h3>
-                  <div className="w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-primary/30 mb-4">
+                  <div className="w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-primary/30 mb-4 relative">
                     <img
                       src={personalInfo.profileImage}
                       alt="Profile 1"
                       className="w-full h-full object-cover"
                     />
+                    {isUploading && imageNumber === 1 && (
+                      <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                      </div>
+                    )}
                   </div>
                   <input
                     type="file"
@@ -141,7 +173,7 @@ export const AboutTab = () => {
                     onChange={(e) => handleFileSelect(e, 1)}
                     className="hidden"
                   />
-                  <Button variant="outline" onClick={() => fileInputRef1.current?.click()}>
+                  <Button variant="outline" onClick={() => fileInputRef1.current?.click()} disabled={isUploading}>
                     <Upload className="w-4 h-4 mr-2" />
                     Change Image
                   </Button>
@@ -150,12 +182,17 @@ export const AboutTab = () => {
                 {/* Profile Image 2 */}
                 <div className="text-center">
                   <h3 className="font-semibold mb-4">About Section Image</h3>
-                  <div className="w-48 h-48 mx-auto rounded-2xl overflow-hidden border-4 border-primary/30 mb-4">
+                  <div className="w-48 h-48 mx-auto rounded-2xl overflow-hidden border-4 border-primary/30 mb-4 relative">
                     <img
                       src={personalInfo.profileImage2}
                       alt="Profile 2"
                       className="w-full h-full object-cover"
                     />
+                    {isUploading && imageNumber === 2 && (
+                      <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                      </div>
+                    )}
                   </div>
                   <input
                     type="file"
@@ -164,7 +201,7 @@ export const AboutTab = () => {
                     onChange={(e) => handleFileSelect(e, 2)}
                     className="hidden"
                   />
-                  <Button variant="outline" onClick={() => fileInputRef2.current?.click()}>
+                  <Button variant="outline" onClick={() => fileInputRef2.current?.click()} disabled={isUploading}>
                     <Upload className="w-4 h-4 mr-2" />
                     Change Image
                   </Button>

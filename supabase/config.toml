@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.update-portfolio]
 verify_jwt = false
+
+[functions.upload-image]
+verify_jwt = false
