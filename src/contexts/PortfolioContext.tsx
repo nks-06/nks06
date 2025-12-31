@@ -204,16 +204,24 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Sync data to database
-  const syncToDatabase = useCallback(async (dataKey: string, dataValue: any) => {
-    if (!isAdminAuthenticated) return;
+  const syncToDatabase = useCallback(async (dataKey: string, dataValue: any, forceSync = false) => {
+    // Allow sync if admin authenticated OR if forceSync is true (for image uploads from admin page)
+    if (!isAdminAuthenticated && !forceSync) {
+      console.log("Skipping sync - not authenticated and forceSync is false");
+      return;
+    }
+    
+    console.log(`Syncing ${dataKey} to database...`, dataValue);
     
     try {
-      const { error } = await supabase.functions.invoke("update-portfolio", {
+      const { data, error } = await supabase.functions.invoke("update-portfolio", {
         body: { dataKey, dataValue },
       });
 
       if (error) {
         console.error("Error syncing to database:", error);
+      } else {
+        console.log(`Successfully synced ${dataKey}:`, data);
       }
     } catch (err) {
       console.error("Error syncing to database:", err);
@@ -268,7 +276,8 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
       updated = { ...personalInfo, profileImage2: imageUrl };
     }
     setPersonalInfo(updated);
-    syncToDatabase("personalInfo", updated);
+    // Force sync for image uploads - they only happen from admin page
+    syncToDatabase("personalInfo", updated, true);
   };
 
   // Skill functions
