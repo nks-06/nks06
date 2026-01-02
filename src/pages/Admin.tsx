@@ -87,16 +87,16 @@ const Admin = () => {
             </div>
 
             <Tabs defaultValue="about" className="space-y-8">
-              <TabsList className="bg-card border border-border flex-wrap h-auto gap-1 p-2">
-                <TabsTrigger value="about" className="gap-2"><User className="w-4 h-4" />About Me</TabsTrigger>
-                <TabsTrigger value="experiences" className="gap-2"><Briefcase className="w-4 h-4" />Experiences</TabsTrigger>
-                <TabsTrigger value="education" className="gap-2"><GraduationCap className="w-4 h-4" />Education</TabsTrigger>
-                <TabsTrigger value="skills" className="gap-2"><Zap className="w-4 h-4" />Skills</TabsTrigger>
-                <TabsTrigger value="projects" className="gap-2"><FolderKanban className="w-4 h-4" />Projects</TabsTrigger>
-                <TabsTrigger value="contact" className="gap-2"><Phone className="w-4 h-4" />Contact</TabsTrigger>
-                <TabsTrigger value="messages" className="gap-2"><MessageSquare className="w-4 h-4" />Messages</TabsTrigger>
-                <TabsTrigger value="api" className="gap-2"><Key className="w-4 h-4" />API Settings</TabsTrigger>
-                <TabsTrigger value="visitors" className="gap-2"><Users className="w-4 h-4" />Visitors</TabsTrigger>
+              <TabsList className="bg-card border border-border flex-wrap h-auto gap-1 p-2 w-full justify-start overflow-x-auto">
+                <TabsTrigger value="about" className="gap-2"><User className="w-4 h-4" /><span className="hidden sm:inline">About Me</span><span className="sm:hidden">About</span></TabsTrigger>
+                <TabsTrigger value="experiences" className="gap-2"><Briefcase className="w-4 h-4" /><span className="hidden sm:inline">Experiences</span><span className="sm:hidden">Exp</span></TabsTrigger>
+                <TabsTrigger value="education" className="gap-2"><GraduationCap className="w-4 h-4" /><span className="hidden sm:inline">Education</span><span className="sm:hidden">Edu</span></TabsTrigger>
+                <TabsTrigger value="skills" className="gap-2"><Zap className="w-4 h-4" /><span className="hidden sm:inline">Skills</span></TabsTrigger>
+                <TabsTrigger value="projects" className="gap-2"><FolderKanban className="w-4 h-4" /><span className="hidden sm:inline">Projects</span></TabsTrigger>
+                <TabsTrigger value="contact" className="gap-2"><Phone className="w-4 h-4" /><span className="hidden sm:inline">Contact</span></TabsTrigger>
+                <TabsTrigger value="messages" className="gap-2"><MessageSquare className="w-4 h-4" /><span className="hidden sm:inline">Messages</span><span className="sm:hidden">Msgs</span></TabsTrigger>
+                <TabsTrigger value="api" className="gap-2"><Key className="w-4 h-4" /><span className="hidden sm:inline">API Settings</span><span className="sm:hidden">API</span></TabsTrigger>
+                <TabsTrigger value="visitors" className="gap-2"><Users className="w-4 h-4" /><span className="hidden sm:inline">Visitors</span></TabsTrigger>
               </TabsList>
 
               <TabsContent value="about"><AboutTab /></TabsContent>
