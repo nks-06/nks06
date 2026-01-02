@@ -4,9 +4,11 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
 };
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -17,18 +19,23 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const url = new URL(req.url);
-    const action = url.searchParams.get("action");
     const messageId = url.searchParams.get("id");
 
+    console.log(`Request method: ${req.method}, messageId: ${messageId}`);
+
     if (req.method === "DELETE" && messageId) {
-      // Delete a message
+      console.log(`Deleting message with id: ${messageId}`);
       const { error } = await supabase
         .from("contact_messages")
         .delete()
         .eq("id", messageId);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Delete error:", error);
+        throw error;
+      }
 
+      console.log("Message deleted successfully");
       return new Response(
         JSON.stringify({ success: true }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -36,28 +43,36 @@ serve(async (req) => {
     }
 
     if (req.method === "PATCH" && messageId) {
-      // Mark as read/unread
+      console.log(`Updating message with id: ${messageId}`);
       const body = await req.json();
       const { error } = await supabase
         .from("contact_messages")
         .update({ is_read: body.is_read })
         .eq("id", messageId);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Update error:", error);
+        throw error;
+      }
 
+      console.log("Message updated successfully");
       return new Response(
         JSON.stringify({ success: true }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // GET - Fetch all messages
+    // GET - Fetch all messages (default for POST without body or GET)
+    console.log("Fetching all messages");
     const { data, error } = await supabase
       .from("contact_messages")
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Fetch error:", error);
+      throw error;
+    }
 
     console.log(`Fetched ${data?.length || 0} contact messages`);
 
