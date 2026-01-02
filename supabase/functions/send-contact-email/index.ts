@@ -58,8 +58,19 @@ serve(async (req) => {
       console.log("Message stored in database");
     }
 
-    // Send email to admin
-    const adminEmail = "nasif.kamal06@gmail.com";
+    // Fetch admin email from settings
+    const { data: adminSettings, error: settingsError } = await supabase
+      .from("admin_settings")
+      .select("admin_email")
+      .limit(1)
+      .maybeSingle();
+
+    if (settingsError) {
+      console.error("Error fetching admin settings:", settingsError);
+    }
+
+    const adminEmail = adminSettings?.admin_email || "nasif.kamal06@gmail.com";
+    console.log("Sending notification to:", adminEmail);
     
     const emailResponse = await resend.emails.send({
       from: "Portfolio Contact <onboarding@resend.dev>",
