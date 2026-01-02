@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const corsHeaders = {
@@ -29,6 +30,10 @@ serve(async (req) => {
       );
     }
 
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
     const resend = new Resend(resendApiKey);
     const { name, email, subject, message }: ContactEmailRequest = await req.json();
 
@@ -40,6 +45,17 @@ serve(async (req) => {
         JSON.stringify({ error: "All fields are required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    // Store message in database
+    const { error: dbError } = await supabase
+      .from("contact_messages")
+      .insert({ name, email, subject, message });
+
+    if (dbError) {
+      console.error("Error storing message:", dbError);
+    } else {
+      console.log("Message stored in database");
     }
 
     // Send email to admin
