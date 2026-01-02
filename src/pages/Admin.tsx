@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Settings, Briefcase, GraduationCap, Zap, FolderKanban, Phone, User, Key, Users, LogOut } from "lucide-react";
+import { Settings, Briefcase, GraduationCap, Zap, FolderKanban, Phone, User, Key, Users, LogOut, MessageSquare } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +14,7 @@ import { ContactTab } from "@/components/admin/ContactTab";
 import { AboutTab } from "@/components/admin/AboutTab";
 import { ApiSettingsTab } from "@/components/admin/ApiSettingsTab";
 import { VisitorsTab } from "@/components/admin/VisitorsTab";
+import { MessagesTab } from "@/components/admin/MessagesTab";
 import { useToast } from "@/hooks/use-toast";
 import { Experience } from "@/types/portfolio";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -93,6 +94,7 @@ const Admin = () => {
                 <TabsTrigger value="skills" className="gap-2"><Zap className="w-4 h-4" />Skills</TabsTrigger>
                 <TabsTrigger value="projects" className="gap-2"><FolderKanban className="w-4 h-4" />Projects</TabsTrigger>
                 <TabsTrigger value="contact" className="gap-2"><Phone className="w-4 h-4" />Contact</TabsTrigger>
+                <TabsTrigger value="messages" className="gap-2"><MessageSquare className="w-4 h-4" />Messages</TabsTrigger>
                 <TabsTrigger value="api" className="gap-2"><Key className="w-4 h-4" />API Settings</TabsTrigger>
                 <TabsTrigger value="visitors" className="gap-2"><Users className="w-4 h-4" />Visitors</TabsTrigger>
               </TabsList>
@@ -131,6 +133,7 @@ const Admin = () => {
               <TabsContent value="skills"><SkillsTab /></TabsContent>
               <TabsContent value="projects"><ProjectsTab /></TabsContent>
               <TabsContent value="contact"><ContactTab /></TabsContent>
+              <TabsContent value="messages"><MessagesTab /></TabsContent>
               <TabsContent value="api"><ApiSettingsTab /></TabsContent>
               <TabsContent value="visitors"><VisitorsTab /></TabsContent>
             </Tabs>
