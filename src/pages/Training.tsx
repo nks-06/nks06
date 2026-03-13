@@ -93,6 +93,141 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
   );
 }
 
+// --- AI Tools Training Section ---
+const aiTopics = [
+  { title: "AI Productivity Tools", desc: "Streamline daily business workflows using AI assistants for email, scheduling, and task management.", icon: Sparkles },
+  { title: "Prompt Engineering", desc: "Master effective prompt crafting for consistent, high-quality AI outputs across models.", icon: Bot },
+  { title: "AI Documentation & Reporting", desc: "Automate reports, summaries, and documentation using AI-powered writing tools.", icon: FileText },
+  { title: "AI for Software Development", desc: "Leverage code assistants, debugging tools, and AI pair programming for faster development.", icon: Code2 },
+  { title: "Automation with AI", desc: "Build no-code/low-code automations connecting AI tools to business processes.", icon: Workflow },
+  { title: "AI Content & Data Generation", desc: "Generate marketing content, data analysis, and visual assets with AI platforms.", icon: Palette },
+];
+
+const aiTools = [
+  { name: "ChatGPT / GPT-4o", category: "Conversational AI" },
+  { name: "Google Gemini", category: "Multimodal AI" },
+  { name: "GitHub Copilot", category: "Code Assistant" },
+  { name: "Claude AI", category: "Research & Analysis" },
+  { name: "Midjourney / DALL·E", category: "Image Generation" },
+  { name: "Notion AI", category: "Productivity" },
+  { name: "Zapier AI / Make", category: "Automation" },
+  { name: "Gamma / Canva AI", category: "Design & Presentations" },
+  { name: "Cursor AI", category: "Dev Environment" },
+  { name: "Perplexity AI", category: "Research" },
+];
+
+const aiUseCases = [
+  "Automated email drafting & responses",
+  "Meeting summaries & action items",
+  "Data analysis & visualization",
+  "Code generation & review",
+  "Content creation at scale",
+  "Document translation & formatting",
+];
+
+function AIToolsTrainingSection() {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <section className="py-12 md:py-16">
+      <div className="container mx-auto px-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-medium mb-4">
+              <Zap className="w-3.5 h-3.5" />
+              Specialized Program
+            </div>
+            <h2 className="text-xl md:text-2xl font-bold text-foreground font-display">
+              AI Tools Training for Productivity & Automation
+            </h2>
+            <p className="text-sm text-muted-foreground mt-2 max-w-2xl mx-auto">
+              Empowering 20+ professionals across multiple organizations with practical AI skills for everyday work.
+            </p>
+          </div>
+
+          {/* Toggle Button */}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="mx-auto flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 bg-primary/5 text-primary text-sm font-medium hover:bg-primary/10 transition-all mb-6"
+          >
+            {isExpanded ? "Hide Details" : "View Full Program Details"}
+            <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`} />
+          </button>
+
+          {/* Expandable Content */}
+          <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"}`}>
+            {/* Topics Grid */}
+            <div className="mb-8">
+              <h3 className="text-base font-bold text-foreground font-display mb-4">Topics Covered</h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {aiTopics.map((t, idx) => (
+                  <div key={idx} className="flex items-start gap-3 p-4 rounded-xl border border-border/50 bg-card/50 hover:border-primary/30 transition-all">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                      <t.icon className="w-4 h-4 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-semibold text-foreground mb-1">{t.title}</h4>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">{t.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tools & Use Cases */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Tools */}
+              <div>
+                <h3 className="text-base font-bold text-foreground font-display mb-4">AI Tools Covered</h3>
+                <div className="space-y-2">
+                  {aiTools.map((tool, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-card/30">
+                      <span className="text-xs font-medium text-foreground">{tool.name}</span>
+                      <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full">{tool.category}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Use Cases */}
+              <div>
+                <h3 className="text-base font-bold text-foreground font-display mb-4">Real-World Use Cases</h3>
+                <div className="space-y-2">
+                  {aiUseCases.map((uc, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-card/30">
+                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                      <span className="text-xs text-foreground">{uc}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Stats */}
+                <div className="mt-4 p-4 rounded-xl border border-primary/20 bg-primary/5">
+                  <div className="grid grid-cols-3 gap-3 text-center">
+                    <div>
+                      <p className="text-lg font-bold text-primary">20+</p>
+                      <p className="text-[10px] text-muted-foreground">Trained</p>
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-primary">97%</p>
+                      <p className="text-[10px] text-muted-foreground">Success Rate</p>
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-primary">10+</p>
+                      <p className="text-[10px] text-muted-foreground">AI Tools</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // --- Page ---
 const Training = () => (
   <>
