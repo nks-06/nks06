@@ -38,10 +38,10 @@ const programs = [
 ];
 
 const process = [
-  { step: "01", title: "Assess", desc: "Evaluate team needs & system requirements", icon: Target },
-  { step: "02", title: "Design", desc: "Create tailored training curriculum", icon: BookOpen },
-  { step: "03", title: "Deliver", desc: "Hands-on sessions & live demos", icon: Monitor },
-  { step: "04", title: "Support", desc: "Post-training assistance & troubleshooting", icon: HeartHandshake },
+  { step: "01", title: "Assess", desc: "Evaluate team skill levels, system requirements, and organizational goals to build a targeted training plan.", tags: ["Needs Analysis", "System Audit", "Gap Assessment"] },
+  { step: "02", title: "Design", desc: "Create structured curriculum with real-world workflows, user manuals, and hands-on exercises tailored to each department.", tags: ["Curriculum Design", "User Manuals", "Workflow Mapping"] },
+  { step: "03", title: "Deliver", desc: "Conduct interactive sessions with live system demos, role-based training, and real operational data simulations.", tags: ["Live Demos", "Hands-on Training", "Q&A Sessions"] },
+  { step: "04", title: "Support", desc: "Provide post-training troubleshooting, continuous user assistance, and performance monitoring for lasting adoption.", tags: ["Troubleshooting", "User Assistance", "Performance Review"] },
 ];
 
 const outcomes = [
