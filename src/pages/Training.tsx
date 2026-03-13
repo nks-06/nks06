@@ -303,7 +303,7 @@ const Training = () => (
                 key={idx}
                 className={`p-5 rounded-xl border border-border/50 bg-gradient-to-r ${p.color} backdrop-blur-sm hover:border-primary/30 transition-all`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                     <p.icon className="w-5 h-5 text-primary" />
                   </div>
