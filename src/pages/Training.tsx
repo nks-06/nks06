@@ -316,8 +316,8 @@ const Training = () => (
                     <p className="text-xs text-muted-foreground">users</p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2 ml-14">{p.desc}</p>
-                <div className="flex items-center gap-3 mt-3 ml-14 flex-wrap">
+                <p className="text-xs text-muted-foreground mt-2 ml-0 md:ml-14">{p.desc}</p>
+                <div className="flex items-center gap-3 mt-3 ml-0 md:ml-14 flex-wrap">
                   <div className="flex flex-wrap gap-1.5">
                     {p.tools.map((tool, i) => (
                       <span key={i} className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">{tool}</span>
