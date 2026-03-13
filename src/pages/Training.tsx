@@ -27,12 +27,12 @@ const metrics = [
 ];
 
 const programs = [
-  { org: "JAAGO Foundation", system: "Odoo ERP", users: "40+", icon: Settings, color: "from-primary/20 to-primary/5" },
-  { org: "JAAGO Foundation", system: "Zoho Suite", users: "30+", icon: BarChart3, color: "from-primary/15 to-primary/5" },
-  { org: "Expo Accessories Ltd", system: "ERP System", users: "50+", icon: Target, color: "from-primary/20 to-primary/5" },
-  { org: "APM ERP", system: "APM ERP", users: "35+", icon: Monitor, color: "from-primary/15 to-primary/5" },
-  { org: "Workspace Infotech", system: "Web App", users: "25+", icon: Globe, color: "from-primary/20 to-primary/5" },
-  { org: "Multiple Organizations", system: "AI Tools Training", users: "20+", icon: Zap, color: "from-primary/15 to-primary/5" },
+  { org: "JAAGO Foundation", system: "Odoo ERP", users: "40+", icon: Settings, color: "from-primary/20 to-primary/5", desc: "Full ERP deployment & team onboarding", tools: ["Odoo 16", "Inventory", "HR", "Accounting"], success: "95%" },
+  { org: "JAAGO Foundation", system: "Zoho Suite", users: "30+", icon: BarChart3, color: "from-primary/15 to-primary/5", desc: "CRM, mail & project management setup", tools: ["Zoho CRM", "Zoho Projects", "Zoho Mail"], success: "92%" },
+  { org: "Expo Accessories Ltd", system: "ERP System", users: "50+", icon: Target, color: "from-primary/20 to-primary/5", desc: "Manufacturing & supply chain training", tools: ["Custom ERP", "Excel Automation", "Reports"], success: "96%" },
+  { org: "APM ERP", system: "APM ERP", users: "35+", icon: Monitor, color: "from-primary/15 to-primary/5", desc: "Enterprise resource planning & workflows", tools: ["APM Modules", "Dashboard", "Analytics"], success: "90%" },
+  { org: "Workspace Infotech", system: "Web App", users: "25+", icon: Globe, color: "from-primary/20 to-primary/5", desc: "Web application user training & support", tools: ["React Apps", "Admin Panels", "APIs"], success: "93%" },
+  { org: "Multiple Organizations", system: "AI Tools Training", users: "20+", icon: Zap, color: "from-primary/15 to-primary/5", desc: "AI productivity & automation workflows", tools: ["ChatGPT", "Gemini", "Copilot", "Midjourney"], success: "97%" },
 ];
 
 const process = [
