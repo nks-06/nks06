@@ -39,6 +39,12 @@ serve(async (req) => {
       contentType = "image/jpeg";
     } else if (imageData.includes("data:image/webp")) {
       contentType = "image/webp";
+    } else if (imageData.includes("data:application/pdf")) {
+      contentType = "application/pdf";
+    } else if (imageData.includes("data:application/msword") || imageData.includes("data:application/vnd.openxmlformats")) {
+      contentType = imageData.includes("vnd.openxmlformats") 
+        ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        : "application/msword";
     }
 
     // Create file path

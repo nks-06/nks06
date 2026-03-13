@@ -66,18 +66,46 @@ export const AboutTab = () => {
     }
   };
 
-  const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isUploadingResume, setIsUploadingResume] = useState(false);
+
+  const handleResumeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (!file) return;
+    
+    setIsUploadingResume(true);
+    try {
       const reader = new FileReader();
-      reader.onload = () => {
-        updateResume(reader.result as string);
+      const dataUrl = await new Promise<string>((resolve) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(file);
+      });
+
+      const { data, error } = await supabase.functions.invoke("upload-image", {
+        body: {
+          imageData: dataUrl,
+          fileName: file.name,
+          folder: "resume",
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        updateResume(data.url);
         toast({
           title: "Resume Updated",
-          description: "Your resume has been uploaded successfully.",
+          description: "Your resume has been uploaded to cloud storage.",
         });
-      };
-      reader.readAsDataURL(file);
+      }
+    } catch (err) {
+      console.error("Error uploading resume:", err);
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload resume. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploadingResume(false);
     }
   };
 

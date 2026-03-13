@@ -9,10 +9,7 @@ const About = () => {
 
   const handleDownloadCV = () => {
     if (personalInfo.resumeUrl) {
-      const link = document.createElement('a');
-      link.href = personalInfo.resumeUrl;
-      link.download = 'Nasif_Kamal_CV.pdf';
-      link.click();
+      window.open(personalInfo.resumeUrl, '_blank');
     }
   };
 

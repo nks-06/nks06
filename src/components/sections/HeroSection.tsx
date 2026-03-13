@@ -81,6 +81,8 @@ export const HeroSection = () => {
                   src={personalInfo.profileImage}
                   alt={personalInfo.name}
                   className="w-full h-full object-cover object-top"
+                  loading="eager"
+                  fetchPriority="high"
                 />
               </div>
 

@@ -5,7 +5,7 @@ import profileImage2 from "@/assets/profile-2.png";
 export const personalInfo: PersonalInfo = {
   name: "Nasif Kamal",
   title: "ERP & AI Automation Expert",
-  subtitle: "Software Developer | IT Administrator | MIS Specialist",
+  subtitle: "Software Developer | IT Administrator | MIS Specialist | AI Solutions Architect",
   email: "nasif.kamal06@gmail.com",
   phone: "+8801780522666",
   location: "Uttara, Dhaka, Bangladesh",
