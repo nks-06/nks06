@@ -193,7 +193,7 @@ function AIToolsTrainingSection() {
                 <h3 className="text-base font-bold text-foreground font-display mb-4">AI Tools Covered</h3>
                 <div className="space-y-2">
                   {aiTools.map((tool, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-card/30">
+                    <div key={idx} className={`flex items-center justify-between p-3 rounded-lg border border-border/50 bg-card/30 ${isExpanded ? "animate-fade-in" : ""}`} style={{ animationDelay: `${(idx + 6) * 60}ms`, animationFillMode: "both" }}>
                       <span className="text-xs font-medium text-foreground">{tool.name}</span>
                       <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full">{tool.category}</span>
                     </div>
