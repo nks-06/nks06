@@ -13,9 +13,9 @@ export const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Effects */}
+      {/* Background Effects - simplified for performance */}
       <div className="absolute inset-0 bg-gradient-dark" />
-      <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-glow opacity-30 animate-float" />
+      <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-glow opacity-30" />
       <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-glow opacity-20" />
 
       <div className="container mx-auto px-4 md:px-8 relative z-10">
