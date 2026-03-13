@@ -285,9 +285,9 @@ export const AboutTab = () => {
                   <div className="text-center py-8 border-2 border-dashed border-border rounded-xl">
                     <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                     <p className="text-muted-foreground mb-4">No resume uploaded yet</p>
-                    <Button variant="hero" onClick={() => resumeInputRef.current?.click()}>
-                      <Upload className="w-4 h-4 mr-2" />
-                      Upload Resume
+                    <Button variant="hero" onClick={() => resumeInputRef.current?.click()} disabled={isUploadingResume}>
+                      {isUploadingResume ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                      {isUploadingResume ? "Uploading..." : "Upload Resume"}
                     </Button>
                   </div>
                 )}
