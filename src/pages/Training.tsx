@@ -333,6 +333,9 @@ const Training = () => (
         </div>
       </section>
 
+      {/* AI Tools Training — Expandable Detail */}
+      <AIToolsTrainingSection />
+
       {/* Outcomes — simple icon grid */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
