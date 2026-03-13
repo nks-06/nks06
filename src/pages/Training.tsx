@@ -23,10 +23,10 @@ import {
 
 // --- Data ---
 const metrics = [
-  { label: "Users Trained", value: 180, suffix: "+", icon: Users },
-  { label: "Enterprise Systems", value: 5, suffix: "+", icon: Monitor },
-  { label: "Sessions Conducted", value: 20, suffix: "+", icon: BookOpen },
-  { label: "Organizations", value: 4, suffix: "", icon: Building2 },
+  { label: "Users Trained", value: 200, suffix: "+", icon: Users },
+  { label: "Enterprise Systems", value: 6, suffix: "+", icon: Monitor },
+  { label: "Sessions Conducted", value: 25, suffix: "+", icon: BookOpen },
+  { label: "Organizations", value: 4, suffix: "+", icon: Building2 },
 ];
 
 const programs = [
