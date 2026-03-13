@@ -66,18 +66,46 @@ export const AboutTab = () => {
     }
   };
 
-  const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isUploadingResume, setIsUploadingResume] = useState(false);
+
+  const handleResumeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (!file) return;
+    
+    setIsUploadingResume(true);
+    try {
       const reader = new FileReader();
-      reader.onload = () => {
-        updateResume(reader.result as string);
+      const dataUrl = await new Promise<string>((resolve) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(file);
+      });
+
+      const { data, error } = await supabase.functions.invoke("upload-image", {
+        body: {
+          imageData: dataUrl,
+          fileName: file.name,
+          folder: "resume",
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        updateResume(data.url);
         toast({
           title: "Resume Updated",
-          description: "Your resume has been uploaded successfully.",
+          description: "Your resume has been uploaded to cloud storage.",
         });
-      };
-      reader.readAsDataURL(file);
+      }
+    } catch (err) {
+      console.error("Error uploading resume:", err);
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload resume. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploadingResume(false);
     }
   };
 
@@ -257,9 +285,9 @@ export const AboutTab = () => {
                   <div className="text-center py-8 border-2 border-dashed border-border rounded-xl">
                     <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                     <p className="text-muted-foreground mb-4">No resume uploaded yet</p>
-                    <Button variant="hero" onClick={() => resumeInputRef.current?.click()}>
-                      <Upload className="w-4 h-4 mr-2" />
-                      Upload Resume
+                    <Button variant="hero" onClick={() => resumeInputRef.current?.click()} disabled={isUploadingResume}>
+                      {isUploadingResume ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                      {isUploadingResume ? "Uploading..." : "Upload Resume"}
                     </Button>
                   </div>
                 )}
