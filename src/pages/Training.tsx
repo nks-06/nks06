@@ -155,22 +155,35 @@ const Training = () => (
           <h2 className="text-xl md:text-2xl font-bold text-foreground font-display mb-8 text-center">
             Organizations I've Trained
           </h2>
-          <div className="max-w-3xl mx-auto space-y-3">
+          <div className="max-w-4xl mx-auto space-y-3">
             {programs.map((p, idx) => (
               <div
                 key={idx}
-                className={`flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-gradient-to-r ${p.color} backdrop-blur-sm hover:border-primary/30 transition-all`}
+                className={`p-5 rounded-xl border border-border/50 bg-gradient-to-r ${p.color} backdrop-blur-sm hover:border-primary/30 transition-all`}
               >
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <p.icon className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <p.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-semibold text-foreground">{p.system}</h3>
+                    <p className="text-xs text-muted-foreground">{p.org}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-lg font-bold text-primary">{p.users}</span>
+                    <p className="text-xs text-muted-foreground">users</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-semibold text-foreground">{p.system}</h3>
-                  <p className="text-xs text-muted-foreground">{p.org}</p>
-                </div>
-                <div className="text-right shrink-0">
-                  <span className="text-lg font-bold text-primary">{p.users}</span>
-                  <p className="text-xs text-muted-foreground">users</p>
+                <p className="text-xs text-muted-foreground mt-2 ml-14">{p.desc}</p>
+                <div className="flex items-center gap-3 mt-3 ml-14 flex-wrap">
+                  <div className="flex flex-wrap gap-1.5">
+                    {p.tools.map((tool, i) => (
+                      <span key={i} className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">{tool}</span>
+                    ))}
+                  </div>
+                  <span className="text-[10px] font-semibold bg-green-500/15 text-green-500 px-2 py-0.5 rounded-full ml-auto shrink-0">
+                    {p.success} Success Rate
+                  </span>
                 </div>
               </div>
             ))}
