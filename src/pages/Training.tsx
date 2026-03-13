@@ -173,7 +173,7 @@ function AIToolsTrainingSection() {
               <h3 className="text-base font-bold text-foreground font-display mb-4">Topics Covered</h3>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {aiTopics.map((t, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-4 rounded-xl border border-border/50 bg-card/50 hover:border-primary/30 transition-all">
+                  <div key={idx} className={`flex items-start gap-3 p-4 rounded-xl border border-border/50 bg-card/50 hover:border-primary/30 transition-all ${isExpanded ? "animate-fade-in" : ""}`} style={{ animationDelay: `${idx * 80}ms`, animationFillMode: "both" }}>
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
                       <t.icon className="w-4 h-4 text-primary" />
                     </div>
