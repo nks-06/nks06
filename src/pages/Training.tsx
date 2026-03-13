@@ -15,6 +15,13 @@ import {
   Globe,
   TrendingUp,
   Award,
+  ChevronDown,
+  Bot,
+  FileText,
+  Code2,
+  Sparkles,
+  Palette,
+  Workflow,
 } from "lucide-react";
 import RecommendationsSection from "@/components/sections/RecommendationsSection";
 
