@@ -196,6 +196,9 @@ const Training = () => (
           </div>
         </div>
       </section>
+
+      {/* Recommendations */}
+      <RecommendationsSection />
     </Layout>
   </>
 );
