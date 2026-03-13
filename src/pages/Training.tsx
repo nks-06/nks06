@@ -206,7 +206,7 @@ function AIToolsTrainingSection() {
                 <h3 className="text-base font-bold text-foreground font-display mb-4">Real-World Use Cases</h3>
                 <div className="space-y-2">
                   {aiUseCases.map((uc, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-card/30">
+                    <div key={idx} className={`flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-card/30 ${isExpanded ? "animate-fade-in" : ""}`} style={{ animationDelay: `${(idx + 16) * 60}ms`, animationFillMode: "both" }}>
                       <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
                       <span className="text-xs text-foreground">{uc}</span>
                     </div>
