@@ -23,10 +23,10 @@ import {
 
 // --- Data ---
 const metrics = [
-  { label: "Users Trained", value: 180, suffix: "+", icon: Users },
-  { label: "Enterprise Systems", value: 5, suffix: "+", icon: Monitor },
-  { label: "Sessions Conducted", value: 20, suffix: "+", icon: BookOpen },
-  { label: "Organizations", value: 4, suffix: "", icon: Building2 },
+  { label: "Users Trained", value: 200, suffix: "+", icon: Users },
+  { label: "Enterprise Systems", value: 6, suffix: "+", icon: Monitor },
+  { label: "Sessions Conducted", value: 25, suffix: "+", icon: BookOpen },
+  { label: "Organizations", value: 4, suffix: "+", icon: Building2 },
 ];
 
 const programs = [
@@ -35,6 +35,7 @@ const programs = [
   { org: "Expo Accessories Ltd", system: "ERP System", users: "50+", icon: Target, color: "from-primary/20 to-primary/5" },
   { org: "APM ERP", system: "APM ERP", users: "35+", icon: Monitor, color: "from-primary/15 to-primary/5" },
   { org: "Workspace Infotech", system: "Web App", users: "25+", icon: Globe, color: "from-primary/20 to-primary/5" },
+  { org: "Multiple Organizations", system: "AI Tools Training", users: "20+", icon: Zap, color: "from-primary/15 to-primary/5" },
 ];
 
 const process = [
