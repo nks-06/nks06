@@ -7,9 +7,23 @@ import { usePortfolio } from "@/contexts/PortfolioContext";
 const About = () => {
   const { personalInfo, educationList, certificationsList, aboutStats } = usePortfolio();
 
-  const handleDownloadCV = () => {
-    if (personalInfo.resumeUrl) {
-      window.open(personalInfo.resumeUrl, '_blank');
+  const handleDownloadCV = async () => {
+    if (!personalInfo.resumeUrl) return;
+    try {
+      const response = await fetch(personalInfo.resumeUrl);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'Nasif_Kamal_CV.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download failed:', err);
+      // Fallback: open in new tab
+      window.open(personalInfo.resumeUrl, '_blank', 'noopener');
     }
   };
 
