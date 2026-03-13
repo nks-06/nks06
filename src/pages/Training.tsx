@@ -27,12 +27,12 @@ const metrics = [
 ];
 
 const programs = [
-  { org: "JAAGO Foundation", system: "Odoo ERP", users: "40+", icon: Settings, color: "from-primary/20 to-primary/5" },
-  { org: "JAAGO Foundation", system: "Zoho Suite", users: "30+", icon: BarChart3, color: "from-primary/15 to-primary/5" },
-  { org: "Expo Accessories Ltd", system: "ERP System", users: "50+", icon: Target, color: "from-primary/20 to-primary/5" },
-  { org: "APM ERP", system: "APM ERP", users: "35+", icon: Monitor, color: "from-primary/15 to-primary/5" },
-  { org: "Workspace Infotech", system: "Web App", users: "25+", icon: Globe, color: "from-primary/20 to-primary/5" },
-  { org: "Multiple Organizations", system: "AI Tools Training", users: "20+", icon: Zap, color: "from-primary/15 to-primary/5" },
+  { org: "JAAGO Foundation", system: "Odoo ERP", users: "40+", icon: Settings, color: "from-primary/20 to-primary/5", desc: "Full ERP deployment & team onboarding", tools: ["Odoo 16", "Inventory", "HR", "Accounting"], success: "95%" },
+  { org: "JAAGO Foundation", system: "Zoho Suite", users: "30+", icon: BarChart3, color: "from-primary/15 to-primary/5", desc: "CRM, mail & project management setup", tools: ["Zoho CRM", "Zoho Projects", "Zoho Mail"], success: "92%" },
+  { org: "Expo Accessories Ltd", system: "ERP System", users: "50+", icon: Target, color: "from-primary/20 to-primary/5", desc: "Manufacturing & supply chain training", tools: ["Custom ERP", "Excel Automation", "Reports"], success: "96%" },
+  { org: "APM ERP", system: "APM ERP", users: "35+", icon: Monitor, color: "from-primary/15 to-primary/5", desc: "Enterprise resource planning & workflows", tools: ["APM Modules", "Dashboard", "Analytics"], success: "90%" },
+  { org: "Workspace Infotech", system: "Web App", users: "25+", icon: Globe, color: "from-primary/20 to-primary/5", desc: "Web application user training & support", tools: ["React Apps", "Admin Panels", "APIs"], success: "93%" },
+  { org: "Multiple Organizations", system: "AI Tools Training", users: "20+", icon: Zap, color: "from-primary/15 to-primary/5", desc: "AI productivity & automation workflows", tools: ["ChatGPT", "Gemini", "Copilot", "Midjourney"], success: "97%" },
 ];
 
 const process = [
@@ -155,22 +155,35 @@ const Training = () => (
           <h2 className="text-xl md:text-2xl font-bold text-foreground font-display mb-8 text-center">
             Organizations I've Trained
           </h2>
-          <div className="max-w-3xl mx-auto space-y-3">
+          <div className="max-w-4xl mx-auto space-y-3">
             {programs.map((p, idx) => (
               <div
                 key={idx}
-                className={`flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-gradient-to-r ${p.color} backdrop-blur-sm hover:border-primary/30 transition-all`}
+                className={`p-5 rounded-xl border border-border/50 bg-gradient-to-r ${p.color} backdrop-blur-sm hover:border-primary/30 transition-all`}
               >
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <p.icon className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <p.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-semibold text-foreground">{p.system}</h3>
+                    <p className="text-xs text-muted-foreground">{p.org}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-lg font-bold text-primary">{p.users}</span>
+                    <p className="text-xs text-muted-foreground">users</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-semibold text-foreground">{p.system}</h3>
-                  <p className="text-xs text-muted-foreground">{p.org}</p>
-                </div>
-                <div className="text-right shrink-0">
-                  <span className="text-lg font-bold text-primary">{p.users}</span>
-                  <p className="text-xs text-muted-foreground">users</p>
+                <p className="text-xs text-muted-foreground mt-2 ml-14">{p.desc}</p>
+                <div className="flex items-center gap-3 mt-3 ml-14 flex-wrap">
+                  <div className="flex flex-wrap gap-1.5">
+                    {p.tools.map((tool, i) => (
+                      <span key={i} className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">{tool}</span>
+                    ))}
+                  </div>
+                  <span className="text-[10px] font-semibold bg-green-500/15 text-green-500 px-2 py-0.5 rounded-full ml-auto shrink-0">
+                    {p.success} Success Rate
+                  </span>
                 </div>
               </div>
             ))}

@@ -20,7 +20,7 @@ const recommendations = [
       "Nasif has been instrumental in optimizing operational efficiency through seamless software implementation and ensuring smooth adoption across teams.",
     takeaway: "Drives adoption & operational efficiency",
     icon: Shield,
-    linkedin: "https://www.linkedin.com/in/nasifkamal",
+    linkedin: "https://www.linkedin.com/in/nk06/details/recommendations/?detailScreenTabIndex=0",
   },
   {
     name: "Nusrat Sharmin",
@@ -30,7 +30,7 @@ const recommendations = [
       "A quick learner with exceptional analytical skills. His expertise in Management Information Systems and strategic thinking makes him a valuable asset to any organization.",
     takeaway: "Quick learner & MIS expert",
     icon: Lightbulb,
-    linkedin: "https://www.linkedin.com/in/nasifkamal",
+    linkedin: "https://www.linkedin.com/in/nk06/details/recommendations/?detailScreenTabIndex=0",
   },
   {
     name: "Théo Willard",
@@ -40,7 +40,7 @@ const recommendations = [
       "Nasif excels at analyzing complex data and providing guidance to the team. His support and expertise have been invaluable in our collaborative projects.",
     takeaway: "Complex data analysis & mentorship",
     icon: BarChart3,
-    linkedin: "https://www.linkedin.com/in/nasifkamal",
+    linkedin: "https://www.linkedin.com/in/nk06/details/recommendations/?detailScreenTabIndex=0",
   },
 ];
 
