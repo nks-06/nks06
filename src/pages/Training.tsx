@@ -128,26 +128,22 @@ const Training = () => (
         </div>
       </section>
 
-      {/* Process Diagram — horizontal flow */}
+      {/* How I Train Teams — card blocks */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-xl md:text-2xl font-bold text-foreground font-display mb-8 text-center">
             How I Train Teams
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
             {process.map((p, idx) => (
-              <div key={idx} className="relative group">
-                <div className="p-5 rounded-xl border border-border/50 bg-card/40 backdrop-blur-sm text-center hover:border-primary/30 transition-colors">
-                  <span className="text-xs font-bold text-primary/40 block mb-2">{p.step}</span>
-                  <div className="w-10 h-10 mx-auto rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                    <p.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-semibold text-foreground">{p.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{p.desc}</p>
+              <div key={idx} className="group p-6 rounded-xl border border-border/50 bg-card hover:border-primary/30 transition-all">
+                <h3 className="text-base font-bold text-foreground mb-2">{p.title}</h3>
+                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{p.desc}</p>
+                <div className="flex flex-wrap gap-2">
+                  {p.tags.map((tag, i) => (
+                    <span key={i} className="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full">{tag}</span>
+                  ))}
                 </div>
-                {idx < 3 && (
-                  <ArrowRight className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 z-10" />
-                )}
               </div>
             ))}
           </div>
