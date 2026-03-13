@@ -256,7 +256,7 @@ const Training = () => (
           {/* Metrics strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10">
             {metrics.map((m) => (
-              <div key={m.label} className="flex items-center gap-3 p-4 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm">
+              <div key={m.label} className="flex items-center gap-2 md:gap-3 p-3 md:p-4 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm">
                 <m.icon className="w-5 h-5 text-primary opacity-70 shrink-0" />
                 <div>
                   <Counter target={m.value} suffix={m.suffix} />
@@ -303,7 +303,7 @@ const Training = () => (
                 key={idx}
                 className={`p-5 rounded-xl border border-border/50 bg-gradient-to-r ${p.color} backdrop-blur-sm hover:border-primary/30 transition-all`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                     <p.icon className="w-5 h-5 text-primary" />
                   </div>
@@ -316,8 +316,8 @@ const Training = () => (
                     <p className="text-xs text-muted-foreground">users</p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2 ml-14">{p.desc}</p>
-                <div className="flex items-center gap-3 mt-3 ml-14 flex-wrap">
+                <p className="text-xs text-muted-foreground mt-2 ml-0 md:ml-14">{p.desc}</p>
+                <div className="flex items-center gap-3 mt-3 ml-0 md:ml-14 flex-wrap">
                   <div className="flex flex-wrap gap-1.5">
                     {p.tools.map((tool, i) => (
                       <span key={i} className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">{tool}</span>
