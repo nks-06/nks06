@@ -127,13 +127,24 @@ const aiUseCases = [
 
 function AIToolsTrainingSection() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleToggle = () => {
+    const willExpand = !isExpanded;
+    setIsExpanded(willExpand);
+    if (willExpand) {
+      setTimeout(() => {
+        contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    }
+  };
 
   return (
     <section className="py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-8">
+          <div ref={contentRef} className="text-center mb-8 scroll-mt-20">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-medium mb-4">
               <Zap className="w-3.5 h-3.5" />
               Specialized Program
@@ -148,7 +159,7 @@ function AIToolsTrainingSection() {
 
           {/* Toggle Button */}
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={handleToggle}
             className="mx-auto flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 bg-primary/5 text-primary text-sm font-medium hover:bg-primary/10 transition-all mb-6"
           >
             {isExpanded ? "Hide Details" : "View Full Program Details"}
