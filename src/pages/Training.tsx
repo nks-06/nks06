@@ -15,11 +15,8 @@ import {
   Globe,
   TrendingUp,
   Award,
-  MessageSquare,
-  Wrench,
-  HeartHandshake,
-  ArrowRight,
 } from "lucide-react";
+import RecommendationsSection from "@/components/sections/RecommendationsSection";
 
 // --- Data ---
 const metrics = [
@@ -199,6 +196,9 @@ const Training = () => (
           </div>
         </div>
       </section>
+
+      {/* Recommendations */}
+      <RecommendationsSection />
     </Layout>
   </>
 );
