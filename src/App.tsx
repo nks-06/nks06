@@ -12,6 +12,7 @@ import Skills from "./pages/Skills";
 import Contact from "./pages/Contact";
 import Projects from "./pages/Projects";
 import Admin from "./pages/Admin";
+import Training from "./pages/Training";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
