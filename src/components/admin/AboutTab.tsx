@@ -71,6 +71,15 @@ export const AboutTab = () => {
   const handleResumeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (file.type !== "application/pdf") {
+      toast({
+        title: "Invalid File",
+        description: "Please upload CV as PDF only.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setIsUploadingResume(true);
     try {
