@@ -303,7 +303,7 @@ export const AboutTab = () => {
                 <input
                   type="file"
                   ref={resumeInputRef}
-                  accept=".pdf,.doc,.docx"
+                  accept="application/pdf,.pdf"
                   onChange={handleResumeUpload}
                   className="hidden"
                 />

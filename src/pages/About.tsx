@@ -8,22 +8,47 @@ const About = () => {
   const { personalInfo, educationList, certificationsList, aboutStats } = usePortfolio();
 
   const handleDownloadCV = async () => {
-    if (!personalInfo.resumeUrl) return;
+    const resumeUrl = personalInfo.resumeUrl?.trim();
+    if (!resumeUrl) return;
+
     try {
-      const response = await fetch(personalInfo.resumeUrl);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'Nasif_Kamal_CV.pdf';
+      // Legacy support: old resumes saved as data URLs
+      if (resumeUrl.startsWith("data:")) {
+        const [meta, base64] = resumeUrl.split(",");
+        if (!base64) throw new Error("Invalid resume data");
+
+        const mimeType = meta.match(/data:([^;]+)/)?.[1] || "application/octet-stream";
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i += 1) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+
+        const blob = new Blob([bytes], { type: mimeType });
+        const objectUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = objectUrl;
+        link.download = mimeType === "application/pdf" ? "Nasif_Kamal_CV.pdf" : "Nasif_Kamal_CV";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(objectUrl);
+        return;
+      }
+
+      // Public storage download (works for all visitors)
+      const separator = resumeUrl.includes("?") ? "&" : "?";
+      const downloadUrl = `${resumeUrl}${separator}download=Nasif_Kamal_CV.pdf`;
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.target = "_blank";
+      link.rel = "noopener";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Download failed:', err);
-      // Fallback: open in new tab
-      window.open(personalInfo.resumeUrl, '_blank', 'noopener');
+      console.error("Download failed:", err);
+      window.open(resumeUrl, "_blank", "noopener");
     }
   };
 
