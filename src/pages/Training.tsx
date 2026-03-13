@@ -256,7 +256,7 @@ const Training = () => (
           {/* Metrics strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10">
             {metrics.map((m) => (
-              <div key={m.label} className="flex items-center gap-3 p-4 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm">
+              <div key={m.label} className="flex items-center gap-2 md:gap-3 p-3 md:p-4 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm">
                 <m.icon className="w-5 h-5 text-primary opacity-70 shrink-0" />
                 <div>
                   <Counter target={m.value} suffix={m.suffix} />
