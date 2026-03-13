@@ -35,6 +35,7 @@ const programs = [
   { org: "Expo Accessories Ltd", system: "ERP System", users: "50+", icon: Target, color: "from-primary/20 to-primary/5" },
   { org: "APM ERP", system: "APM ERP", users: "35+", icon: Monitor, color: "from-primary/15 to-primary/5" },
   { org: "Workspace Infotech", system: "Web App", users: "25+", icon: Globe, color: "from-primary/20 to-primary/5" },
+  { org: "Multiple Organizations", system: "AI Tools Training", users: "20+", icon: Zap, color: "from-primary/15 to-primary/5" },
 ];
 
 const process = [
