@@ -17,9 +17,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <span className="text-3xl font-bold text-gradient">NK</span>
-            </Link>
+            <NKLogo />
             <p className="text-muted-foreground leading-relaxed">
               ERP & AI Automation Expert with 7+ years of experience in
               software development, IT administration, and digital
