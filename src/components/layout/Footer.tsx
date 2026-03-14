@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Linkedin, Mail, Phone, MapPin } from "lucide-react";
 import { usePortfolio } from "@/contexts/PortfolioContext";
+import { NKLogo } from "@/components/NKLogo";
 
 export const Footer = () => {
   const { personalInfo } = usePortfolio();
